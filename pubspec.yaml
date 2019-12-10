@@ -1,8 +1,8 @@
 name: flutter_tencentplayer_plus
 description: flutter_plugin_flutter_tencentplayer_plus
 version: 0.0.1
-author:
-homepage:
+author:  wilson <yxw_android@163.com>
+homepage: https://github.com/yxwandroid/flutter_tencentplayer_plus.git
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
