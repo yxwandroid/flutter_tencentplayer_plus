@@ -12,9 +12,9 @@ flutter_tencentplayer_plus  是基于腾讯云点播封装的flutter版的播放
 6. 设置播放速度
 
 
-![](readme/2e30b36b.png)
-### 效果图
 
+### 效果图
+![](readme/android.gif)
 
 
 
