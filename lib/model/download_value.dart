@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class DownloadValue {
   final String downloadStatus;
   final int quanlity;
@@ -55,14 +53,12 @@ class DownloadValue {
     );
   }
 
-
   @override
   String toString() {
     return toJson().toString();
   }
 
-  Map<String, dynamic> toJson() =>
-      <String, dynamic>{
+  Map<String, dynamic> toJson() => <String, dynamic>{
         'downloadStatus': this.downloadStatus,
         'quanlity': this.quanlity,
         'duration': this.duration,
@@ -77,7 +73,6 @@ class DownloadValue {
       };
 
   factory DownloadValue.fromJson(Map<dynamic, dynamic> json) {
-
     return DownloadValue(
       downloadStatus: json['downloadStatus'] as String,
       quanlity: int.parse(json['quanlity'].toString()),
@@ -91,7 +86,5 @@ class DownloadValue {
       fileId: json['fileId'] as String,
       error: json['error'] as String,
     );
-
   }
-
 }

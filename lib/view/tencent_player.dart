@@ -58,14 +58,14 @@ class _TencentPlayerState extends State<TencentPlayer> {
 
   @override
   Widget build(BuildContext context) {
-
-
-    return  ValueListenableBuilder(
+    return ValueListenableBuilder(
       valueListenable: widget.controller,
-      builder: (BuildContext context, TencentPlayerValue value, Widget child){
+      builder: (BuildContext context, TencentPlayerValue value, Widget child) {
 //        return  Texture(textureId: widget.controller.textureId);
-      var  _textureId = widget.controller.textureId;
-        return _textureId == null ? Container() : Texture(textureId: _textureId);
+        var _textureId = widget.controller.textureId;
+        return _textureId == null
+            ? Container()
+            : Texture(textureId: _textureId);
       },
     );
 //    ChangeNotifierProvider

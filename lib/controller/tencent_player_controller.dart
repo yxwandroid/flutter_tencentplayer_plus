@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tencentplayer_plus/flutter_tencentplayer_plus.dart';
 
-
-
 class TencentPlayerController extends ValueNotifier<TencentPlayerValue> {
   int _textureId;
   final String dataSource;
@@ -12,20 +10,28 @@ class TencentPlayerController extends ValueNotifier<TencentPlayerValue> {
   final PlayerConfig playerConfig;
   MethodChannel channel = TencentPlayer.channel;
 
+  TencentPlayerController.asset(this.dataSource,
+      {this.playerConfig = const PlayerConfig()})
+      : dataSourceType = DataSourceType.asset,
+        super(TencentPlayerValue());
 
-  TencentPlayerController.asset(this.dataSource, {this.playerConfig = const PlayerConfig()}): dataSourceType = DataSourceType.asset, super(TencentPlayerValue());
+  TencentPlayerController.network(this.dataSource,
+      {this.playerConfig = const PlayerConfig()})
+      : dataSourceType = DataSourceType.network,
+        super(TencentPlayerValue());
 
-  TencentPlayerController.network(this.dataSource, {this.playerConfig = const PlayerConfig()}): dataSourceType = DataSourceType.network, super(TencentPlayerValue());
-
-  TencentPlayerController.file(String filePath, {this.playerConfig = const PlayerConfig()}): dataSource = filePath, dataSourceType = DataSourceType.file, super(TencentPlayerValue());
+  TencentPlayerController.file(String filePath,
+      {this.playerConfig = const PlayerConfig()})
+      : dataSource = filePath,
+        dataSourceType = DataSourceType.file,
+        super(TencentPlayerValue());
 
   bool _isDisposed = false;
   StreamSubscription<dynamic> _eventSubscription;
   _VideoAppLifeCycleObserver _lifeCycleObserver;
 
-  @visibleForTesting
+//  @visibleForTesting
   int get textureId => _textureId;
-
 
   ///初始化播放器的方法
   Future<void> initialize() async {
@@ -45,9 +51,8 @@ class TencentPlayerController extends ValueNotifier<TencentPlayerValue> {
     value = value.copyWith(isPlaying: playerConfig.autoPlay);
     dataSourceDescription.addAll(playerConfig.toJson());
 
-
-
-    final Map<String, dynamic> response = await channel.invokeMapMethod<String, dynamic>(
+    final Map<String, dynamic> response =
+        await channel.invokeMapMethod<String, dynamic>(
       'create',
       dataSourceDescription,
     );
@@ -55,17 +60,15 @@ class TencentPlayerController extends ValueNotifier<TencentPlayerValue> {
     _textureId = response['textureId'];
 
     ///设置监听naive 返回的的数据
-    _eventSubscription = _eventChannelFor(_textureId).receiveBroadcastStream().listen(eventListener);
+    _eventSubscription = _eventChannelFor(_textureId)
+        .receiveBroadcastStream()
+        .listen(eventListener);
   }
-
-
-
 
   ///注册监听native的方法
   EventChannel _eventChannelFor(int textureId) {
     return EventChannel('flutter_tencentplayer/videoEvents$textureId');
   }
-
 
   ///native 传递到flutter 进行数据处理
   void eventListener(dynamic event) {
@@ -75,7 +78,10 @@ class TencentPlayerController extends ValueNotifier<TencentPlayerValue> {
     final Map<dynamic, dynamic> map = event;
     switch (map['event']) {
       case 'initialized':
-        value = value.copyWith(duration: Duration(milliseconds: map['duration']), size: Size(map['width']?.toDouble() ?? 0.0, map['height']?.toDouble() ?? 0.0),
+        value = value.copyWith(
+          duration: Duration(milliseconds: map['duration']),
+          size: Size(map['width']?.toDouble() ?? 0.0,
+              map['height']?.toDouble() ?? 0.0),
         );
         break;
       case 'progress':
@@ -103,14 +109,13 @@ class TencentPlayerController extends ValueNotifier<TencentPlayerValue> {
     }
   }
 
-
-
   @override
   Future dispose() async {
     if (!_isDisposed) {
       _isDisposed = true;
       await _eventSubscription?.cancel();
-      await channel.invokeListMethod('dispose', <String, dynamic>{'textureId': _textureId});
+      await channel.invokeListMethod(
+          'dispose', <String, dynamic>{'textureId': _textureId});
       _lifeCycleObserver.dispose();
     }
     super.dispose();
@@ -131,9 +136,11 @@ class TencentPlayerController extends ValueNotifier<TencentPlayerValue> {
       return;
     }
     if (value.isPlaying) {
-      await channel.invokeMethod('play', <String, dynamic>{'textureId': _textureId});
+      await channel
+          .invokeMethod('play', <String, dynamic>{'textureId': _textureId});
     } else {
-      await channel.invokeMethod('pause', <String, dynamic>{'textureId': _textureId});
+      await channel
+          .invokeMethod('pause', <String, dynamic>{'textureId': _textureId});
     }
   }
 
@@ -199,11 +206,13 @@ class _VideoAppLifeCycleObserver with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
+
       ///组件进入暂停状态
       case AppLifecycleState.paused:
         _wasPlayingBeforePause = _controller.value.isPlaying;
         _controller.pause();
         break;
+
       ///组件进入活跃状态
       case AppLifecycleState.resumed:
         if (_wasPlayingBeforePause) {
