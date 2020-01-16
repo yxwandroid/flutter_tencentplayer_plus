@@ -47,7 +47,7 @@ allprojects {
         google()
         jcenter()
         flatDir {
-            dirs "${plugins.get("flutter_tencentplayer")}android/libs"
+            dirs "${plugins.get("flutter_tencentplayer_plus")}android/libs"
         }
     }
 }
